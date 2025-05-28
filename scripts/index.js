@@ -2,10 +2,10 @@
 const cardTemplate = document.querySelector("#card-template").content;
 
 // @todo: DOM узлы
-const cardContainer = document.querySelector(".places__list");
+const cardsContainer = document.querySelector(".places__list");
 
 // @todo: Функция создания карточки
-function createCard({ name, link }) {
+function createCard({ name, link }, deleteCard) {
   const cardElement = cardTemplate.querySelector(".places__item").cloneNode(true);
   const image = cardElement.querySelector(".card__image");
   const title = cardElement.querySelector(".card__title");
@@ -29,6 +29,6 @@ function createCard({ name, link }) {
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach((element) => {
-  const card = createCard(element);
-  cardContainer.append(card);
+  const card = createCard(element, deleteCard);
+  cardsContainer.append(card);
 });
