@@ -3,40 +3,43 @@ import { createCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import '../pages/index.css';
 
-// Добавление класса с анимацией для попапов
+// Добавление анимационного класса всем попапам
 document.querySelectorAll('.popup').forEach(popup => {
   popup.classList.add('popup_is-animated');
 })
 
-// DOM узлы
+// Контейнер для карточек
 const cardsContainer = document.querySelector('.places__list');
 
-// DOM-элементы для профиля
+// Попап редактирования профиля
 const editProfilePopup = document.querySelector('.popup_type_edit');
 const formElement = document.querySelector('.popup__form[name="edit-profile"]');
 const nameInput = formElement.querySelector('.popup__input_type_name');
 const jobInput = formElement.querySelector('.popup__input_type_description');
 
-// DOM-элементы текущего профиля на странице
+// Элементы профиля на странице
 const profileName = document.querySelector('.profile__title');
 const profileJob = document.querySelector('.profile__description');
 
-// DOM-элементы для добавления новой карточки
+// Попап добавления карточки
 const newPlacePopup = document.querySelector('.popup_type_new-card');
 const addCardForm = document.querySelector('.popup__form[name="new-place"]');
 const placeNameInput = addCardForm.querySelector('.popup__input_type_card-name');
 const placeLinkInput = addCardForm.querySelector('.popup__input_type_url');
 
-// DOM-элементы для изображения
+// Попап просмотра изображения
 const imagePopup = document.querySelector('.popup_type_image');
 const popupImage = document.querySelector('.popup__image');
 const popupCaption = document.querySelector('.popup__caption');
 
+// Кнопки открытия попапов
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
+
+// Все кнопки закрытия попапов
 const closeButtons = document.querySelectorAll('.popup__close');
 
-// Обработчики событий (открытие попапа)
+// Открытие попапа редактирования профиля
 editButton.addEventListener('click', () => {
   nameInput.value = profileName.textContent;
   jobInput.value = profileJob.textContent;
@@ -44,6 +47,7 @@ editButton.addEventListener('click', () => {
   openModal(editProfilePopup);
 })
 
+// Открытие попапа добавления карточки
 addButton.addEventListener('click', () => openModal(newPlacePopup));
 
 // Открытие попапа на изображении
@@ -55,26 +59,27 @@ function handleImageClick(name, link) {
   openModal(imagePopup);
 }
 
-// Обработчики событий (закрытие попапа)
-document.addEventListener('click', function(evt) {
-  if (evt.target.classList.contains('popup__close')) {
-    const popup = evt.target.closest('.popup');
-    closeModal(popup);
-  }
-})
+// Закрытие попапов
+closeButtons.forEach(button => {
+  button.addEventListener('click', evt => {
+  const popup = evt.target.closest('.popup');
+  
+  closeModal(popup);
+  });
+});
 
-// Функция удаления карточки
- function deleteCard (cardElement) {
+// Удаление карточки
+ function deleteCard(cardElement) {
   cardElement.remove();
 }
 
-// Вывести карточки на страницу
+// Создание стартовых карточек
 initialCards.forEach((element) => {
   const card = createCard(element, deleteCard, handleImageClick, handleLikeCard);
   cardsContainer.append(card);
 })
 
-// Обработчик обновления профиля
+// Обновление данных профиля при отправке формы
 formElement.addEventListener('submit', function handleFormSubmit (evt) {
   evt.preventDefault();
 
@@ -84,7 +89,7 @@ formElement.addEventListener('submit', function handleFormSubmit (evt) {
   closeModal(editProfilePopup);
 })
 
-// Обработчик добавления новой карточки
+// Добавление новой карточки из формы
 addCardForm.addEventListener('submit', function handleAddCardSubmit (evt) {
   evt.preventDefault();
 
@@ -98,7 +103,7 @@ addCardForm.addEventListener('submit', function handleAddCardSubmit (evt) {
   addCardForm.reset();
 })
 
-// Лайк карточки 
-  function handleLikeCard (cardElement, likeButton) {
+// Обработка лайка карточки
+  function handleLikeCard(cardElement, likeButton) {
     likeButton.classList.toggle('card__like-button_is-active');
   }
