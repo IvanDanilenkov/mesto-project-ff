@@ -6,7 +6,17 @@ import '../pages/index.css';
 // DOM узлы
 const cardsContainer = document.querySelector('.places__list');
 
+// DOM-элементы для профиля
 const editProfilePopup = document.querySelector('.popup_type_edit');
+const formElement = document.querySelector('.popup__form[name="edit-profile"]');
+const nameInput = formElement.querySelector('.popup__input_type_name');
+const jobInput = formElement.querySelector('.popup__input_type_description');
+
+// DOM-элементы текущего профиля на странице
+const profileName = document.querySelector('.profile__title');
+const profileJob = document.querySelector('.profile__description');
+
+// DOM-элементы для добавления новой карточки
 const newPlacePopup = document.querySelector('.popup_type_new-card');
 const imagePopup = document.querySelector('.popup_type_image');
 const popupImage = document.querySelector('.popup__image');
@@ -17,7 +27,13 @@ const addButton = document.querySelector('.profile__add-button');
 const closeButtons = document.querySelectorAll('.popup__close');
 
 // Обработчики событий (открытие попапа)
-editButton.addEventListener('click', () => openModal(editProfilePopup));
+editButton.addEventListener('click', () => {
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileJob.textContent;
+  
+  openModal(editProfilePopup)
+});
+
 addButton.addEventListener('click', () => openModal(newPlacePopup));
 
 // Обработчики событий (закрытие попапа)
@@ -45,4 +61,14 @@ function handleImageClick(name, link) {
 initialCards.forEach((element) => {
   const card = createCard(element, deleteCard, handleImageClick);
   cardsContainer.append(card);
+})
+
+// Функция обновления профиля
+formElement.addEventListener('submit', function handleFormSubmit (evt) {
+  evt.preventDefault();
+
+  profileName.textContent = nameInput.value;
+  profileJob.textContent = jobInput.value;
+
+  closeModal(editProfilePopup);
 })
