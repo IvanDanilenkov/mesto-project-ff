@@ -104,6 +104,6 @@ addCardForm.addEventListener('submit', function handleAddCardSubmit (evt) {
 })
 
 // Обработка лайка карточки
-  function handleLikeCard(cardElement, likeButton) {
+  function handleLikeCard(likeButton) {
     likeButton.classList.toggle('card__like-button_is-active');
   }

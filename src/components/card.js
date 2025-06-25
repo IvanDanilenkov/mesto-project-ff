@@ -18,7 +18,7 @@ export function createCard({ name, link }, deleteCard, imageClick, likeCard) {
   });
 
   likeButton.addEventListener('click', () => {
-    likeCard(cardElement, likeButton);
+    likeCard(likeButton);
   });
 
   image.addEventListener('click', () => {
