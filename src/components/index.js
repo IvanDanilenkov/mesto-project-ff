@@ -65,7 +65,7 @@ function handleImageClick(name, link) {
 
 // Вывести карточки на страницу
 initialCards.forEach((element) => {
-  const card = createCard(element, deleteCard, handleImageClick);
+  const card = createCard(element, deleteCard, handleImageClick, handleLikeCard);
   cardsContainer.append(card);
 })
 
@@ -86,9 +86,14 @@ addCardForm.addEventListener('submit', function handleAddCardSubmit (evt) {
   const name = placeNameInput.value;
   const link = placeLinkInput.value;
 
-  const newCard = createCard({ name, link }, deleteCard, handleImageClick);
+  const newCard = createCard({ name, link }, deleteCard, handleImageClick, handleLikeCard);
   cardsContainer.prepend(newCard);
 
   closeModal(newPlacePopup);
   addCardForm.reset();
 })
+
+// Лайк карточки 
+  function handleLikeCard (cardElement, likeButton) {
+    likeButton.classList.toggle('card__like-button_is-active');
+  }
