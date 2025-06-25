@@ -3,6 +3,11 @@ import { createCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import '../pages/index.css';
 
+// Добавление класса с анимацией для попапов
+document.querySelectorAll('.popup').forEach(popup => {
+  popup.classList.add('popup_is-animated');
+})
+
 // DOM узлы
 const cardsContainer = document.querySelector('.places__list');
 
@@ -41,6 +46,15 @@ editButton.addEventListener('click', () => {
 
 addButton.addEventListener('click', () => openModal(newPlacePopup));
 
+// Открытие попапа на изображении
+function handleImageClick(name, link) {
+  popupImage.src = link;
+  popupImage.alt = name;
+  popupCaption.textContent = name;
+
+  openModal(imagePopup);
+}
+
 // Обработчики событий (закрытие попапа)
 document.addEventListener('click', function(evt) {
   if (evt.target.classList.contains('popup__close')) {
@@ -52,15 +66,6 @@ document.addEventListener('click', function(evt) {
 // Функция удаления карточки
  function deleteCard (cardElement) {
   cardElement.remove();
-}
-
-// Открытие попапа на изображении
-function handleImageClick(name, link) {
-  popupImage.src = link;
-  popupImage.alt = name;
-  popupCaption.textContent = name;
-
-  openModal(imagePopup);
 }
 
 // Вывести карточки на страницу
