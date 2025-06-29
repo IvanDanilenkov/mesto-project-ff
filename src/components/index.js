@@ -1,5 +1,5 @@
 import { initialCards } from "./cards.js";
-import { createCard, deleteCard } from './card.js';
+import { createCard, deleteCard, handleLikeCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import '../pages/index.css';
 
@@ -45,11 +45,6 @@ function handleCardImageClick(name, link) {
   imageFull.alt = name;
   captionFull.textContent = name;
   openModal(popupFullImage);
-}
-
-// Обработка лайка карточки (переключение класса активности)
-function handleLikeCard(likeButton) {
-  likeButton.classList.toggle('card__like-button_is-active');
 }
 
 // Обработчик отправки формы редактирования профиля

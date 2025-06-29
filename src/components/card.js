@@ -34,6 +34,6 @@ export function createCard({ name, link }, handleDeleteCard, handleImageClick) {
 }
 
 // Обработка лайка карточки
-  function handleLikeCard(likeButton) {
+ export function handleLikeCard(likeButton) {
     likeButton.classList.toggle('card__like-button_is-active');
   }
