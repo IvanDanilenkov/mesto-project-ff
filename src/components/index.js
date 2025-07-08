@@ -2,6 +2,7 @@ import { initialCards } from "./cards.js";
 import { createCard, deleteCard, handleLikeCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import '../pages/index.css';
+import { enableValidation } from "./validation.js";
 
 // Добавление анимационного класса всем попапам
 document.querySelectorAll('.popup').forEach(popup => {
@@ -35,6 +36,16 @@ const captionFull = document.querySelector('.popup__caption');
 // Кнопки открытия попапов
 const buttonOpenPopupProfile = document.querySelector('.profile__edit-button');
 const buttonOpenPopupAddNewCard = document.querySelector('.profile__add-button');
+
+// Конфиги валидации форм
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
 
 // Кнопки закрытия всех попапов
 const popupCloseButtons = document.querySelectorAll('.popup__close');
@@ -95,3 +106,6 @@ initialCards.forEach((element) => {
   const card = createCard(element, deleteCard, handleCardImageClick, handleLikeCard);
   cardsContainer.append(card);
 })
+
+// Запуск валидации
+enableValidation(validationConfig);
