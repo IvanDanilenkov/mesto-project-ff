@@ -65,3 +65,15 @@ export function enableValidation(config) {
     setEventListeners(form, config);
   });
 }
+
+export function clearValidation (form, config) {
+  const inputs = Array.from(form.querySelectorAll(config.inputSelector));
+  const button = form.querySelector(config.submitButtonSelector);
+
+  inputs.forEach((input) => {
+    input.setCustomValidity('');
+    hideInputError(form, input, config);
+  });
+
+  toggleButtonState(inputs, button, config);
+}

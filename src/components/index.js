@@ -2,7 +2,7 @@ import { initialCards } from "./cards.js";
 import { createCard, deleteCard, handleLikeCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import '../pages/index.css';
-import { enableValidation } from "./validation.js";
+import { clearValidation, enableValidation } from "./validation.js";
 
 // Добавление анимационного класса всем попапам
 document.querySelectorAll('.popup').forEach(popup => {
@@ -81,11 +81,15 @@ function handleAddCardFormSubmit(evt) {
 buttonOpenPopupProfile.addEventListener('click', () => {
   inputProfileName.value = profileTitle.textContent;
   inputProfileJob.value = profileDescription.textContent;
+  clearValidation (formProfile, validationConfig);
   openModal(popupProfile);
 })
 
 // Открытие попапа добавления карточки
-buttonOpenPopupAddNewCard.addEventListener('click', () => openModal(popupAddNewCard));
+buttonOpenPopupAddNewCard.addEventListener('click', () => {
+  formAddNewCard.reset();
+  clearValidation(formAddNewCard, validationConfig);
+  openModal(popupAddNewCard)});
 
 // Закрытие попапов по кнопкам закрытия
 popupCloseButtons.forEach(button => {
