@@ -1,9 +1,8 @@
-import { initialCards } from "./cards.js";
 import { createCard, deleteCard, handleLikeCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import '../pages/index.css';
 import { clearValidation, enableValidation } from "./validation.js";
-import { getUserInfo } from "./api.js";
+import { getUserInfo, getInitialCards } from "./api.js";
 
 // Добавление анимационного класса всем попапам
 document.querySelectorAll('.popup').forEach(popup => {
@@ -108,21 +107,23 @@ formProfile.addEventListener('submit', handleProfileFormSubmit);
 // Отправка формы добавления новой карточки
 formAddNewCard.addEventListener('submit', handleAddCardFormSubmit);
 
-// Создание стартовых карточек из массива
-initialCards.forEach((element) => {
-  const card = createCard(element, deleteCard, handleCardImageClick, handleLikeCard);
-  cardsContainer.append(card);
-})
-
 // Запуск валидации
 enableValidation(validationConfig);
 
-getUserInfo()
-  .then((data) => {
-    profileTitle.textContent = data.name;
-    profileDescription.textContent = data.about;
-    profileImage.style.backgroundImage = `url(${data.avatar})`;
-    userId = data._id;
+// Получение данных профиля и карточек 
+Promise.all([getUserInfo(), getInitialCards()])
+  .then(([cardData, cards]) => {
+
+    profileTitle.textContent = cardData.name;
+    profileDescription.textContent = cardData.about;
+    profileImage.style.backgroundImage = `url(${cardData.avatar})`;
+
+    userId = cardData._id;
+
+    cards.forEach((cardsData) => {
+      const card = createCard(cardsData, deleteCard, handleCardImageClick, handleLikeCard, userId)
+      cardsContainer.append(card);
+    });
   })
   .catch((error) => {
     console.error('Ошибка при получении данных:', error);
