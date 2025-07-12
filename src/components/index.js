@@ -3,6 +3,7 @@ import { createCard, deleteCard, handleLikeCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import '../pages/index.css';
 import { clearValidation, enableValidation } from "./validation.js";
+import { getUserInfo } from "./api.js";
 
 // Добавление анимационного класса всем попапам
 document.querySelectorAll('.popup').forEach(popup => {
@@ -21,6 +22,8 @@ const inputProfileJob = formProfile.querySelector('.popup__input_type_descriptio
 // Элементы профиля на странице
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const profileImage = document.querySelector('.profile__image');
+let userId = '';
 
 // Попап добавления карточки и его элементы
 const popupAddNewCard = document.querySelector('.popup_type_new-card');
@@ -113,3 +116,14 @@ initialCards.forEach((element) => {
 
 // Запуск валидации
 enableValidation(validationConfig);
+
+getUserInfo()
+  .then((data) => {
+    profileTitle.textContent = data.name;
+    profileDescription.textContent = data.about;
+    profileImage.style.backgroundImage = `url(${data.avatar})`;
+    userId = data._id;
+  })
+  .catch((error) => {
+    console.error('Ошибка при получении данных:', error);
+  })
