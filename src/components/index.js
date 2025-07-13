@@ -1,8 +1,8 @@
+import '../pages/index.css';
 import { createCard, deleteCard, handleLikeCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
-import '../pages/index.css';
 import { clearValidation, enableValidation } from "./validation.js";
-import { getUserInfo, getInitialCards } from "./api.js";
+import { getUserInfo, getInitialCards, updateUserProfile, addNewCard } from "./api.js";
 
 // Добавление анимационного класса всем попапам
 document.querySelectorAll('.popup').forEach(popup => {
@@ -63,20 +63,38 @@ function handleCardImageClick(name, link) {
 // Обработчик отправки формы редактирования профиля
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-  profileTitle.textContent = inputProfileName.value;
-  profileDescription.textContent = inputProfileJob.value;
-  closeModal(popupProfile);
+
+  const name = inputProfileName.value;
+  const about = inputProfileJob.value;
+
+  updateUserProfile(name, about)
+  .then((data) => {
+    profileTitle.textContent = data.name;
+    profileDescription.textContent = data.about;
+    closeModal(popupProfile);
+  })
+  .catch((err) => {
+    console.error('Ошибка при обновлении профиля:', err)
+  });
 }
 
 // Обработчик отправки формы добавления новой карточки
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
+
   const name = placeNameInput.value;
   const link = placeLinkInput.value;
-  const newCard = createCard({ name, link }, deleteCard, handleCardImageClick, handleLikeCard);
+
+  addNewCard(name, link)
+  .then((data) => {
+  const newCard = createCard(data, deleteCard, handleCardImageClick, handleLikeCard, userId);
   cardsContainer.prepend(newCard);
   closeModal(popupAddNewCard);
   formAddNewCard.reset();
+  })
+  .catch((err) => {
+    console.error('Ошибка при добавления новой карточки:', err)
+  });
 }
 
 // Открытие попапа редактирования профиля
@@ -112,13 +130,13 @@ enableValidation(validationConfig);
 
 // Получение данных профиля и карточек 
 Promise.all([getUserInfo(), getInitialCards()])
-  .then(([cardData, cards]) => {
+  .then(([userData, cards]) => {
 
-    profileTitle.textContent = cardData.name;
-    profileDescription.textContent = cardData.about;
-    profileImage.style.backgroundImage = `url(${cardData.avatar})`;
+    profileTitle.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+    profileImage.style.backgroundImage = `url(${userData.avatar})`;
 
-    userId = cardData._id;
+    userId = userData._id;
 
     cards.forEach((cardsData) => {
       const card = createCard(cardsData, deleteCard, handleCardImageClick, handleLikeCard, userId)

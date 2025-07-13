@@ -25,3 +25,43 @@ export function getInitialCards () {
     return res.json();
   });
 }
+
+export function updateUserProfile(name, about) {
+  return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-42/users/me', {
+    method: 'POST',
+    headers: {
+      authorization: '0f821d11-a105-48a3-bfde-fe7dabbb61c0',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      about: about
+    })
+  })
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error(`Ошибка: ${res.status}`);
+    }
+    return res.json();
+  });
+}
+
+export function addNewCard(name, link) {
+  return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-42/cards', {
+    method: 'PATCH',
+    headers: {
+      authorization: '0f821d11-a105-48a3-bfde-fe7dabbb61c0',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      link: link
+    })
+  })
+  .then((res) => {
+    if(!res.ok) {
+      throw new Error(`Ошибка: ${res.status}`);
+    }
+    return res.json();
+  });
+}
