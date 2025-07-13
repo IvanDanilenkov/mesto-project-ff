@@ -18,14 +18,17 @@ export function createCard(cardData, handleDeleteCard, handleImageClick, userId)
     likeButton.classList.add('card__like-button_is-active');
   }
 
+  console.log('Карта:', cardData.name, '| Owner:', cardData.owner._id, '| You:', userId);
+
+
   // Обработка удаления — только если карточка твоя
   if (cardData.owner._id !== userId) {
     deleteButton.remove();
-  }
-
-  deleteButton.addEventListener('click', () => {
+  } else {
+     deleteButton.addEventListener('click', () => {
     handleDeleteCard(cardElement, cardData._id);
   });
+  };
 
   likeButton.addEventListener('click', () => {
     handleLikeCard(likeButton, cardData._id);

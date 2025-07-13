@@ -2,7 +2,8 @@ import '../pages/index.css';
 import { createCard, deleteCard, handleLikeCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import { clearValidation, enableValidation } from "./validation.js";
-import { getUserInfo, getInitialCards, updateUserProfile, addNewCard } from "./api.js";
+import { getUserInfo, getInitialCards, updateUserProfile, addNewCard, deleteCardRequest, toggleLike } from "./api.js";
+import { handleApiError } from './utils.js';
 
 // Добавление анимационного класса всем попапам
 document.querySelectorAll('.popup').forEach(popup => {
@@ -73,9 +74,7 @@ function handleProfileFormSubmit(evt) {
     profileDescription.textContent = data.about;
     closeModal(popupProfile);
   })
-  .catch((err) => {
-    console.error('Ошибка при обновлении профиля:', err)
-  });
+  .catch((err) => handleApiError(err, 'Ошибка при обновлении профиля'));
 }
 
 // Обработчик отправки формы добавления новой карточки
@@ -87,14 +86,13 @@ function handleAddCardFormSubmit(evt) {
 
   addNewCard(name, link)
   .then((data) => {
-  const newCard = createCard(data, deleteCard, handleCardImageClick, handleLikeCard, userId);
-  cardsContainer.prepend(newCard);
-  closeModal(popupAddNewCard);
-  formAddNewCard.reset();
+    data.owner = { _id: userId };
+    const newCard = createCard(data, deleteCard, handleCardImageClick, userId);
+    cardsContainer.prepend(newCard);
+    closeModal(popupAddNewCard);
+    formAddNewCard.reset();
   })
-  .catch((err) => {
-    console.error('Ошибка при добавления новой карточки:', err)
-  });
+  .catch((err) => handleApiError(err, 'Ошибка при добавлении карточки'));
 }
 
 // Открытие попапа редактирования профиля
@@ -143,6 +141,4 @@ Promise.all([getUserInfo(), getInitialCards()])
       cardsContainer.append(card);
     });
   })
-  .catch((error) => {
-    console.error('Ошибка при получении данных:', error);
-  })
+  .catch((err) => handleApiError(err, 'Ошибка при загрузке данных с сервера'));

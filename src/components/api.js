@@ -1,67 +1,74 @@
-export function getUserInfo () {
-  return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-42/users/me', {
-    headers: {
-      authorization: '0f821d11-a105-48a3-bfde-fe7dabbb61c0'
-    }
-  })
-  .then((res) => {
-    if (!res.ok) {
-      throw new Error(`Ошибка: ${res.status}`);
-    }
+import { handleApiError } from "./utils";
+
+const baseUrl = 'https://mesto.nomoreparties.co/v1/wff-cohort-42';
+const token = '0f821d11-a105-48a3-bfde-fe7dabbb61c0';
+const headers = {
+  authorization: token,
+  'Content-Type': 'application/json'
+};
+
+// Общая функция для проверки ответов от сервера
+function checkResponse(res) {
+  if(res.ok) {
     return res.json();
+  }
+  return res.json().then((error) => {
+    error.httpResponseCode = res.status;
+    return Promise.reject(error);
   });
+}
+
+export function getUserInfo () {
+  return fetch(`${baseUrl}/users/me`, {
+    headers
+  })
+  .then(checkResponse)
+  .catch((err) => handleApiError(err, 'Ошибка загрузки профиля'));
 }
 
 export function getInitialCards () {
-  return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-42/cards', {
-    headers: {
-      authorization: '0f821d11-a105-48a3-bfde-fe7dabbb61c0'
-    }
+  return fetch(`${baseUrl}/cards`, {
+    headers
   })
-  .then((res) => {
-    if(!res.ok) {
-      throw new Error(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  });
+  .then(checkResponse)
+  .catch((err) => handleApiError(err, 'Ошибка загрузки карточек'));
 }
 
 export function updateUserProfile(name, about) {
-  return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-42/users/me', {
-    method: 'POST',
-    headers: {
-      authorization: '0f821d11-a105-48a3-bfde-fe7dabbb61c0',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: name,
-      about: about
-    })
+  return fetch(`${baseUrl}/users/me`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ name, about })
   })
-  .then((res) => {
-    if (!res.ok) {
-      throw new Error(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  });
+  .then(checkResponse)
+  .catch((err) => handleApiError(err, 'Ошибка обновления профиля'));
 }
+  
 
 export function addNewCard(name, link) {
-  return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-42/cards', {
-    method: 'PATCH',
-    headers: {
-      authorization: '0f821d11-a105-48a3-bfde-fe7dabbb61c0',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: name,
-      link: link
-    })
+  return fetch(`${baseUrl}/cards`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ name, link, })
   })
-  .then((res) => {
-    if(!res.ok) {
-      throw new Error(`Ошибка: ${res.status}`);
-    }
-    return res.json();
-  });
+  .then(checkResponse)
+  .catch((err) => handleApiError(err, 'Ошибка добавления карточки'));
+}
+
+export function deleteCardRequest (cardId) {
+  return fetch(`${baseUrl}/cards/${cardId}`, {
+    method: 'DELETE',
+    headers
+  })
+  .then(checkResponse)
+  .catch((err) => handleApiError(err, 'Ошибка удаления карточки'));
+}
+
+export function toggleLike(cardId, isLiked) {
+  return fetch(`${baseUrl}/cards/likes/${cardId}`, {
+    method: isLiked ? 'DELETE' : 'PUT',
+    headers,
+  })
+  .then(checkResponse)
+  .catch((err) => handleApiError(err, 'Ошибка обновления лайка'));
 }
