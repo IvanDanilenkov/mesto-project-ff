@@ -1,8 +1,8 @@
 import '../pages/index.css';
-import { createCard, deleteCard, handleLikeCard } from './card.js';
+import { createCard, deleteCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import { clearValidation, enableValidation } from "./validation.js";
-import { getUserInfo, getInitialCards, updateUserProfile, addNewCard, deleteCardRequest, toggleLike } from "./api.js";
+import { getUserInfo, getInitialCards, updateUserProfile, addNewCard } from "./api.js";
 import { handleApiError } from './utils.js';
 
 // Добавление анимационного класса всем попапам
@@ -137,7 +137,7 @@ Promise.all([getUserInfo(), getInitialCards()])
     userId = userData._id;
 
     cards.forEach((cardsData) => {
-      const card = createCard(cardsData, deleteCard, handleCardImageClick, handleLikeCard, userId)
+      const card = createCard(cardsData, deleteCard, handleCardImageClick, userId)
       cardsContainer.append(card);
     });
   })
