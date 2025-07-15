@@ -2,7 +2,7 @@ import '../pages/index.css';
 import { createCard, deleteCard } from './card.js';
 import { openModal, closeModal } from "./modal.js";
 import { clearValidation, enableValidation } from "./validation.js";
-import { getUserInfo, getInitialCards, updateUserProfile, addNewCard } from "./api.js";
+import { getUserInfo, getInitialCards, updateUserProfile, addNewCard, updateUserAvatar } from "./api.js";
 import { handleApiError } from './utils.js';
 
 // Добавление анимационного класса всем попапам
@@ -36,9 +36,18 @@ const popupFullImage = document.querySelector('.popup_type_image');
 const imageFull = document.querySelector('.popup__image');
 const captionFull = document.querySelector('.popup__caption');
 
+// Попап изменения аватара пользователя
+const popupAvatar = document.querySelector('.popup_type_new-avatar');
+const formEditAvatarProfile = document.querySelector('.popup__form[name="edit-avatar"]');
+const inputEditAvatar = formEditAvatarProfile.querySelector('.popup__input_type_url');
+
 // Кнопки открытия попапов
 const buttonOpenPopupProfile = document.querySelector('.profile__edit-button');
 const buttonOpenPopupAddNewCard = document.querySelector('.profile__add-button');
+const buttonOpenAvatarEdit = document.querySelector('.profile__avatar-button');
+
+// Кнопки закрытия всех попапов
+const popupCloseButtons = document.querySelectorAll('.popup__close');
 
 // Конфиги валидации форм
 const validationConfig = {
@@ -50,15 +59,26 @@ const validationConfig = {
   errorClass: 'popup__error_visible'
 };
 
-// Кнопки закрытия всех попапов
-const popupCloseButtons = document.querySelectorAll('.popup__close');
-
 // Открытие попапа с полной картинкой
 function handleCardImageClick(name, link) {
   imageFull.src = link;
   imageFull.alt = name;
   captionFull.textContent = name;
   openModal(popupFullImage);
+}
+
+// Обработчик отправки формы для изменения аватара
+function handleEditAvatarFormSubmit(evt) {
+  evt.preventDefault();
+
+  const link = inputEditAvatar.value;
+
+  updateUserAvatar(link)
+    .then((data) => {
+      profileImage.style.backgroundImage = `url(${data.avatar})`;
+      closeModal(popupAvatar);
+    })
+    .catch((err) => handleApiError(err, 'Ошибка обновления аватара'));
 }
 
 // Обработчик отправки формы редактирования профиля
@@ -109,6 +129,13 @@ buttonOpenPopupAddNewCard.addEventListener('click', () => {
   clearValidation(formAddNewCard, validationConfig);
   openModal(popupAddNewCard)});
 
+// Открытие попапа изменения аватара
+buttonOpenAvatarEdit.addEventListener('click', () => {
+  formEditAvatarProfile.reset();
+  clearValidation(formEditAvatarProfile, validationConfig);
+  openModal(popupAvatar);
+})
+
 // Закрытие попапов по кнопкам закрытия
 popupCloseButtons.forEach(button => {
   button.addEventListener('click', evt => {
@@ -122,6 +149,9 @@ formProfile.addEventListener('submit', handleProfileFormSubmit);
 
 // Отправка формы добавления новой карточки
 formAddNewCard.addEventListener('submit', handleAddCardFormSubmit);
+
+// Отправка формф изменения аватара
+formEditAvatarProfile.addEventListener('submit', handleEditAvatarFormSubmit);
 
 // Запуск валидации
 enableValidation(validationConfig);

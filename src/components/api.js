@@ -1,5 +1,3 @@
-import { handleApiError } from "./utils";
-
 const baseUrl = 'https://mesto.nomoreparties.co/v1/wff-cohort-42';
 const token = '0f821d11-a105-48a3-bfde-fe7dabbb61c0';
 const headers = {
@@ -22,16 +20,14 @@ export function getUserInfo () {
   return fetch(`${baseUrl}/users/me`, {
     headers
   })
-  .then(checkResponse)
-  .catch((err) => handleApiError(err, 'Ошибка загрузки профиля'));
+  .then(checkResponse);
 }
 
 export function getInitialCards () {
   return fetch(`${baseUrl}/cards`, {
     headers
   })
-  .then(checkResponse)
-  .catch((err) => handleApiError(err, 'Ошибка загрузки карточек'));
+  .then(checkResponse);
 }
 
 export function updateUserProfile(name, about) {
@@ -40,8 +36,7 @@ export function updateUserProfile(name, about) {
     headers,
     body: JSON.stringify({ name, about })
   })
-  .then(checkResponse)
-  .catch((err) => handleApiError(err, 'Ошибка обновления профиля'));
+  .then(checkResponse);
 }
   
 
@@ -51,8 +46,7 @@ export function addNewCard(name, link) {
     headers,
     body: JSON.stringify({ name, link, })
   })
-  .then(checkResponse)
-  .catch((err) => handleApiError(err, 'Ошибка добавления карточки'));
+  .then(checkResponse);
 }
 
 export function deleteCardRequest (cardId) {
@@ -60,8 +54,7 @@ export function deleteCardRequest (cardId) {
     method: 'DELETE',
     headers
   })
-  .then(checkResponse)
-  .catch((err) => handleApiError(err, 'Ошибка удаления карточки'));
+  .then(checkResponse);
 }
 
 export function toggleLike(cardId, isLiked) {
@@ -69,6 +62,14 @@ export function toggleLike(cardId, isLiked) {
     method: isLiked ? 'DELETE' : 'PUT',
     headers,
   })
-  .then(checkResponse)
-  .catch((err) => handleApiError(err, 'Ошибка обновления лайка'));
+  .then(checkResponse);
+}
+
+export function updateUserAvatar (avatar) {
+  return fetch(`${baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ avatar })
+  })
+  .then(checkResponse);
 }
