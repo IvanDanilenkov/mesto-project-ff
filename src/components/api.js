@@ -23,11 +23,15 @@ function request (endPoint, options = {}) {
 }
 
 export function getUserInfo () {
-  return request('/users/me');
+  return request('/users/me', {
+    headers
+  });
 }
 
 export function getInitialCards () {
-  return request('/cards');
+  return request('/cards', {
+    headers
+  });
 }
 
 export function updateUserProfile(name, about) {
