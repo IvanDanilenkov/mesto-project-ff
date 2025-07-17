@@ -16,60 +16,54 @@ function checkResponse(res) {
   });
 }
 
-export function getUserInfo () {
-  return fetch(`${baseUrl}/users/me`, {
-    headers
-  })
+// Универсальная функция запроса: обертка над fetch
+function request (endPoint, options = {}) {
+  return fetch(baseUrl + endPoint, options)
   .then(checkResponse);
+}
+
+export function getUserInfo () {
+  return request('/users/me');
 }
 
 export function getInitialCards () {
-  return fetch(`${baseUrl}/cards`, {
-    headers
-  })
-  .then(checkResponse);
+  return request('/cards');
 }
 
 export function updateUserProfile(name, about) {
-  return fetch(`${baseUrl}/users/me`, {
+  return request('/users/me', {
     method: 'PATCH',
     headers,
     body: JSON.stringify({ name, about })
-  })
-  .then(checkResponse);
+  });
 }
-  
 
 export function addNewCard(name, link) {
-  return fetch(`${baseUrl}/cards`, {
+  return request('/cards', {
     method: 'POST',
     headers,
     body: JSON.stringify({ name, link, })
-  })
-  .then(checkResponse);
+  });
 }
 
 export function deleteCardRequest (cardId) {
-  return fetch(`${baseUrl}/cards/${cardId}`, {
+  return request(`/cards/${cardId}`, {
     method: 'DELETE',
     headers
-  })
-  .then(checkResponse);
+  });
 }
-
+  
 export function toggleLike(cardId, isLiked) {
-  return fetch(`${baseUrl}/cards/likes/${cardId}`, {
+  return request(`/cards/likes/${cardId}`, {
     method: isLiked ? 'DELETE' : 'PUT',
-    headers,
-  })
-  .then(checkResponse);
+    headers, 
+  });
 }
 
 export function updateUserAvatar (avatar) {
-  return fetch(`${baseUrl}/users/me/avatar`, {
+  return request('/users/me/avatar', {
     method: 'PATCH',
     headers,
     body: JSON.stringify({ avatar })
-  })
-  .then(checkResponse);
+  });
 }
